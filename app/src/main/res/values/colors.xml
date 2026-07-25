@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="pad_bg">#16161A</color>
+    <color name="toolbar_bg">#22222A</color>
+    <color name="accent">#5B8DEF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+</resources>

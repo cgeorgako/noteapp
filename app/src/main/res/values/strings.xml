@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LockNote</string>
+    <string name="tile_label">Νέα σημείωση</string>
+
+    <string name="main_hint">Γράφε γρήγορες χειρόγραφες σημειώσεις με το δάχτυλο. Άνοιξε το μπλοκ κατευθείαν από την κλειδωμένη οθόνη μέσω του πλακιδίου Γρήγορων Ρυθμίσεων ή της μόνιμης ειδοποίησης — χωρίς ξεκλείδωμα.</string>
+    <string name="open_pad">Άνοιγμα μπλοκ σχεδίασης</string>
+    <string name="saved_notes">Αποθηκευμένες σημειώσεις</string>
+    <string name="start_service">Εκκίνηση παρασκηνίου</string>
+    <string name="stop_service">Διακοπή παρασκηνίου</string>
+    <string name="tile_hint">Συμβουλή: Πρόσθεσε το πλακίδιο «Νέα σημείωση» στις Γρήγορες Ρυθμίσεις για πρόσβαση από την κλειδωμένη οθόνη.</string>
+
+    <string name="undo">Αναίρεση</string>
+    <string name="redo">Επανάληψη</string>
+    <string name="clear">Καθαρισμός</string>
+    <string name="save">Αποθήκευση</string>
+    <string name="close">Κλείσιμο</string>
+
+    <string name="note_saved">Η σημείωση αποθηκεύτηκε</string>
+    <string name="nothing_to_save">Δεν υπάρχει τίποτα για αποθήκευση</string>
+    <string name="no_notes">Δεν υπάρχουν αποθηκευμένες σημειώσεις ακόμη</string>
+    <string name="confirm_delete">Διαγραφή αυτής της σημείωσης;</string>
+    <string name="delete">Διαγραφή</string>
+    <string name="cancel">Άκυρο</string>
+    <string name="note_thumb">Μικρογραφία σημείωσης</string>
+
+    <string name="notif_title">LockNote ενεργό</string>
+    <string name="notif_text">Πάτησε «Νέα σημείωση» για γρήγορο γράψιμο</string>
+    <string name="action_new_note">Νέα σημείωση</string>
+    <string name="channel_name">Υπηρεσία LockNote</string>
+    <string name="channel_desc">Κρατά το μπλοκ σημειώσεων προσβάσιμο με ένα άγγιγμα</string>
+</resources>
