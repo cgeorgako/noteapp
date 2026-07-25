@@ -8,7 +8,8 @@
     <style name="Theme.LockNote.Fullscreen" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:statusBarColor">@color/pad_bg</item>
+        <item name="android:statusBarColor">@color/note_paper</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">@color/toolbar_bg</item>
     </style>
 
@@ -19,5 +20,9 @@
         <item name="android:scaleType">fitCenter</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="android:tint">@color/white</item>
+    </style>
+
+    <style name="PadButtonDone" parent="PadButton">
+        <item name="android:tint">@color/accent</item>
     </style>
 </resources>

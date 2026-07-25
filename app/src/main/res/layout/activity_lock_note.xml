@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/pad_bg">
+    android:background="@color/note_paper">
 
     <com.example.locknote.DrawingView
         android:id="@+id/drawingView"
@@ -53,14 +53,12 @@
                 android:layout_gravity="center_vertical" android:background="#33FFFFFF"
                 android:layout_marginStart="4dp" android:layout_marginEnd="4dp" />
 
-            <ImageButton android:id="@+id/btnLock" style="@style/PadButton"
-                android:src="@drawable/ic_lockscreen" android:contentDescription="@string/set_lock" />
             <ImageButton android:id="@+id/btnPdf" style="@style/PadButton"
                 android:src="@drawable/ic_pdf" android:contentDescription="@string/export_pdf" />
             <ImageButton android:id="@+id/btnShare" style="@style/PadButton"
                 android:src="@drawable/ic_share" android:contentDescription="@string/share" />
-            <ImageButton android:id="@+id/btnClose" style="@style/PadButton"
-                android:src="@drawable/ic_close" android:contentDescription="@string/close" />
+            <ImageButton android:id="@+id/btnDone" style="@style/PadButtonDone"
+                android:src="@drawable/ic_done" android:contentDescription="@string/done" />
         </LinearLayout>
     </HorizontalScrollView>
 
