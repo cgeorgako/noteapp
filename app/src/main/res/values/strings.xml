@@ -5,25 +5,36 @@
 
     <string name="main_hint">Γράφε γρήγορες χειρόγραφες σημειώσεις με το δάχτυλο. Άνοιξε το μπλοκ κατευθείαν από την κλειδωμένη οθόνη μέσω του πλακιδίου Γρήγορων Ρυθμίσεων ή της μόνιμης ειδοποίησης — χωρίς ξεκλείδωμα.</string>
     <string name="open_pad">Άνοιγμα μπλοκ σχεδίασης</string>
-    <string name="saved_notes">Αποθηκευμένες σημειώσεις</string>
     <string name="start_service">Εκκίνηση παρασκηνίου</string>
     <string name="stop_service">Διακοπή παρασκηνίου</string>
     <string name="tile_hint">Συμβουλή: Πρόσθεσε το πλακίδιο «Νέα σημείωση» στις Γρήγορες Ρυθμίσεις για πρόσβαση από την κλειδωμένη οθόνη.</string>
 
+    <!-- Tools -->
+    <string name="pen">Στυλό</string>
+    <string name="eraser">Γόμα</string>
+    <string name="thickness">Πάχος</string>
+    <string name="pen_size">Πάχος στυλό</string>
+    <string name="eraser_size">Πάχος γόμας</string>
+    <string name="size_value">Πάχος: %1$d px</string>
     <string name="undo">Αναίρεση</string>
     <string name="redo">Επανάληψη</string>
     <string name="clear">Καθαρισμός</string>
-    <string name="save">Αποθήκευση</string>
     <string name="close">Κλείσιμο</string>
-
-    <string name="note_saved">Η σημείωση αποθηκεύτηκε</string>
-    <string name="nothing_to_save">Δεν υπάρχει τίποτα για αποθήκευση</string>
-    <string name="no_notes">Δεν υπάρχουν αποθηκευμένες σημειώσεις ακόμη</string>
-    <string name="confirm_delete">Διαγραφή αυτής της σημείωσης;</string>
-    <string name="delete">Διαγραφή</string>
+    <string name="confirm_clear">Καθαρισμός όλης της σημείωσης;</string>
     <string name="cancel">Άκυρο</string>
-    <string name="note_thumb">Μικρογραφία σημείωσης</string>
 
+    <!-- Lock wallpaper / PDF / share -->
+    <string name="set_lock">Ορισμός ως οθόνη κλειδώματος</string>
+    <string name="export_pdf">Αποθήκευση PDF</string>
+    <string name="share">Κοινοποίηση</string>
+    <string name="share_via">Κοινοποίηση μέσω</string>
+    <string name="lock_set">Ορίστηκε ως ταπετσαρία κλειδώματος</string>
+    <string name="lock_failed">Απέτυχε ο ορισμός ταπετσαρίας</string>
+    <string name="pdf_saved">Αποθηκεύτηκε: %1$s</string>
+    <string name="pdf_failed">Απέτυχε η δημιουργία PDF</string>
+    <string name="nothing_to_save">Δεν υπάρχει τίποτα ακόμη</string>
+
+    <!-- Notification -->
     <string name="notif_title">LockNote ενεργό</string>
     <string name="notif_text">Πάτησε «Νέα σημείωση» για γρήγορο γράψιμο</string>
     <string name="action_new_note">Νέα σημείωση</string>

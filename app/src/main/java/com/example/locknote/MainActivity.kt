@@ -27,9 +27,6 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnOpenPad).setOnClickListener {
             startActivity(Intent(this, LockNoteActivity::class.java))
         }
-        findViewById<Button>(R.id.btnViewNotes).setOnClickListener {
-            startActivity(Intent(this, NotesListActivity::class.java))
-        }
         findViewById<Button>(R.id.btnStartService).setOnClickListener {
             NoteService.start(this)
         }

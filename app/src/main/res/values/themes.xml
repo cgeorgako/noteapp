@@ -13,10 +13,10 @@
     </style>
 
     <style name="PadButton">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">52dp</item>
+        <item name="android:layout_height">52dp</item>
         <item name="android:padding">12dp</item>
+        <item name="android:scaleType">fitCenter</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="android:tint">@color/white</item>
     </style>

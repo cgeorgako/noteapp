@@ -9,7 +9,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <!-- Restart the background service after reboot -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Set the note as the lock-screen wallpaper -->
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
 
     <application
         android:allowBackup="true"
@@ -20,7 +21,7 @@
         android:theme="@style/Theme.LockNote"
         tools:targetApi="27">
 
-        <!-- Main launcher: manage the service, open the pad, view saved notes -->
+        <!-- Main launcher: manage the service and open the pad -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -39,12 +40,6 @@
             android:showWhenLocked="true"
             android:turnScreenOn="true"
             android:theme="@style/Theme.LockNote.Fullscreen" />
-
-        <!-- Browse saved notes -->
-        <activity
-            android:name=".NotesListActivity"
-            android:exported="false"
-            android:parentActivityName=".MainActivity" />
 
         <!-- Foreground service = "runs in the background" -->
         <service
@@ -70,6 +65,17 @@
                 android:name="android.service.quicksettings.ACTIVE_TILE"
                 android:value="false" />
         </service>
+
+        <!-- Share exported PDFs via a content:// URI -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
         <!-- Restart the service after boot -->
         <receiver
