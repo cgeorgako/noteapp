@@ -218,7 +218,12 @@ class LockNoteActivity : AppCompatActivity() {
             finalW = finalH / aspect
         }
         val left = (w - finalW) / 2f
-        val top = (h - finalH) / 2f * 0.92f
+        // Horizontally centred, but sitting in the lower-centre so the note
+        // stays clear of the lock-screen clock at the top.
+        val bottomMargin = h * 0.10f
+        val minTop = h * 0.30f          // keep below the clock area
+        val maxTop = h - bottomMargin - finalH
+        val top = (h * 0.60f - finalH / 2f).coerceIn(minTop, maxTop.coerceAtLeast(minTop))
         val rect = RectF(left, top, left + finalW, top + finalH)
         val radius = w * 0.045f
 
