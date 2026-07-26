@@ -295,8 +295,10 @@ class LockNoteActivity : AppCompatActivity() {
         doc.finishPage(page)
 
         val stamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+        val name = "LockNote_$stamp.pdf"
+        // Always render to a cache copy first (used for sharing).
         val dir = File(cacheDir, "pdf").apply { mkdirs() }
-        val file = File(dir, "LockNote_$stamp.pdf")
+        val file = File(dir, name)
         val saved = runCatching { FileOutputStream(file).use { doc.writeTo(it) } }.isSuccess
         doc.close()
         if (!saved) { toast(R.string.pdf_failed); return }
@@ -311,7 +313,41 @@ class LockNoteActivity : AppCompatActivity() {
             }
             startActivity(android.content.Intent.createChooser(send, getString(R.string.share_via)))
         } else {
-            toast(getString(R.string.pdf_saved, file.name))
+            savePdfToDownloads(file, name)
+        }
+    }
+
+    /** Copy the PDF into the public Downloads/LockNote folder so it's findable. */
+    private fun savePdfToDownloads(cacheFile: File, name: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val values = android.content.ContentValues().apply {
+                put(android.provider.MediaStore.Downloads.DISPLAY_NAME, name)
+                put(android.provider.MediaStore.Downloads.MIME_TYPE, "application/pdf")
+                put(
+                    android.provider.MediaStore.Downloads.RELATIVE_PATH,
+                    android.os.Environment.DIRECTORY_DOWNLOADS + "/LockNote"
+                )
+            }
+            val ok = runCatching {
+                val uri = contentResolver.insert(
+                    android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, values
+                ) ?: return@runCatching false
+                contentResolver.openOutputStream(uri)?.use { out ->
+                    cacheFile.inputStream().use { it.copyTo(out) }
+                }
+                true
+            }.getOrDefault(false)
+            toast(if (ok) getString(R.string.pdf_saved, "Λήψεις/LockNote/$name") else getString(R.string.pdf_failed))
+        } else {
+            // Pre-Android 10: app-specific Documents dir (no permission needed).
+            val ok = runCatching {
+                val dir = File(getExternalFilesDir(android.os.Environment.DIRECTORY_DOCUMENTS), "LockNote")
+                    .apply { mkdirs() }
+                val dst = File(dir, name)
+                cacheFile.inputStream().use { input -> FileOutputStream(dst).use { input.copyTo(it) } }
+                dst.absolutePath
+            }.getOrNull()
+            toast(if (ok != null) getString(R.string.pdf_saved, ok) else getString(R.string.pdf_failed))
         }
     }
 
