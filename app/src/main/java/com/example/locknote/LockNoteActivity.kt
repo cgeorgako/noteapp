@@ -90,6 +90,27 @@ class LockNoteActivity : AppCompatActivity() {
         // (persistent notification, boot restart) — best effort, no prompt here.
         NoteService.ensureChannel(this)
         runCatching { NoteService.start(this) }
+
+        maybeShowOnboarding()
+    }
+
+    /** First-run guide: how it works + one-tap access setup. Shown once. */
+    private fun maybeShowOnboarding() {
+        val prefs = getSharedPreferences("locknote", MODE_PRIVATE)
+        if (prefs.getBoolean("onboarding_done", false)) return
+
+        val view = layoutInflater.inflate(R.layout.dialog_onboarding, null)
+        val dialog = AlertDialog.Builder(this).setView(view).create()
+        view.findViewById<android.widget.Button>(R.id.btnOnbAddTile)
+            .setOnClickListener { Setup.addQuickTile(this) }
+        view.findViewById<android.widget.Button>(R.id.btnOnbLock)
+            .setOnClickListener { Setup.showLockScreenSetup(this) }
+        view.findViewById<android.widget.Button>(R.id.btnOnbStart)
+            .setOnClickListener { dialog.dismiss() }
+        dialog.setOnDismissListener {
+            prefs.edit().putBoolean("onboarding_done", true).apply()
+        }
+        dialog.show()
     }
 
     override fun onPause() {

@@ -19,6 +19,11 @@
     <string name="open_settings">Άνοιγμα Ρυθμίσεων</string>
     <string name="settings_unavailable">Δεν βρέθηκαν οι Ρυθμίσεις</string>
 
+    <!-- First-run onboarding -->
+    <string name="onb_title">Καλωσόρισες στο LockNote</string>
+    <string name="onb_body">Γράψε μια γρήγορη χειρόγραφη σημείωση με το δάχτυλο και πάτα «Τέλος» (✓). Η σημείωση μπαίνει αυτόματα σαν χαρτάκι στην οθόνη κλειδώματος.\n\nΓια να την ανοίγεις χωρίς ξεκλείδωμα, ρύθμισε την πρόσβαση:</string>
+    <string name="onb_start">Ξεκίνησέ το</string>
+
     <!-- Tools -->
     <string name="pen">Στυλό</string>
     <string name="eraser">Γόμα</string>
