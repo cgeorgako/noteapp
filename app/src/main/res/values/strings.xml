@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">LockNote</string>
-    <string name="tile_label">Νέα σημείωση</string>
+    <string name="tile_label">LockNote</string>
 
     <string name="main_hint">Γράφε μια γρήγορη χειρόγραφη σημείωση με το δάχτυλο και, μόλις κλείσεις το μπλοκ, μπαίνει αυτόματα σαν χαρτάκι στην οθόνη κλειδώματος (πάνω στην τρέχουσα ταπετσαρία σου). Άνοιξέ το χωρίς ξεκλείδωμα από το πλακίδιο Γρήγορων Ρυθμίσεων ή τη μόνιμη ειδοποίηση.</string>
     <string name="open_pad">Άνοιγμα μπλοκ σχεδίασης</string>
     <string name="start_service">Εκκίνηση παρασκηνίου</string>
     <string name="stop_service">Διακοπή παρασκηνίου</string>
-    <string name="tile_hint">Συμβουλή: Πρόσθεσε το πλακίδιο «Νέα σημείωση» στις Γρήγορες Ρυθμίσεις για πρόσβαση από την κλειδωμένη οθόνη.</string>
+    <string name="tile_hint">Συμβουλή: Πρόσθεσε το πλακίδιο «LockNote» στις Γρήγορες Ρυθμίσεις (προσοχή: όχι το πλακίδιο σημείωσης της Samsung) για πρόσβαση από την κλειδωμένη οθόνη.</string>
 
     <!-- Tools -->
     <string name="pen">Στυλό</string>

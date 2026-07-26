@@ -1,6 +1,7 @@
 package com.example.locknote
 
 import android.content.Intent
+import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 
 /**
@@ -8,6 +9,19 @@ import android.service.quicksettings.TileService
  * the drawing pad directly over the lock screen, no unlock required.
  */
 class NoteTileService : TileService() {
+
+    override fun onStartListening() {
+        super.onStartListening()
+        // Make our tile clearly recognisable (vs. the built-in Samsung note tile).
+        qsTile?.apply {
+            label = getString(R.string.tile_label)
+            if (android.os.Build.VERSION.SDK_INT >= 29) {
+                subtitle = getString(R.string.app_name)
+            }
+            state = Tile.STATE_INACTIVE
+            updateTile()
+        }
+    }
 
     override fun onClick() {
         super.onClick()
