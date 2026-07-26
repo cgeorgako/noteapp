@@ -9,6 +9,16 @@
     <string name="stop_service">Διακοπή παρασκηνίου</string>
     <string name="tile_hint">Συμβουλή: Πρόσθεσε το πλακίδιο «LockNote» στις Γρήγορες Ρυθμίσεις (προσοχή: όχι το πλακίδιο σημείωσης της Samsung) για πρόσβαση από την κλειδωμένη οθόνη.</string>
 
+    <!-- Setup -->
+    <string name="setup_header">Ρύθμιση πρόσβασης</string>
+    <string name="background_header">Παρασκήνιο</string>
+    <string name="add_tile">Προσθήκη πλακιδίου στις Γρήγορες Ρυθμίσεις</string>
+    <string name="add_tile_manual">Σύρε κάτω τη μπάρα ειδοποιήσεων → άνοιξε την επεξεργασία πλακιδίων (εικονίδιο ✎ ή ⋮) → βρες το πλακίδιο «LockNote» και σύρε το στα ενεργά. (Στο Android 13+ γίνεται αυτόματα με ένα άγγιγμα.)</string>
+    <string name="lock_setup">Ρύθμιση οθόνης κλειδώματος</string>
+    <string name="lock_setup_steps">Το Android δεν επιτρέπει σε εφαρμογή να προσθέσει μόνη της συντόμευση στην οθόνη κλειδώματος — γίνεται από τις Ρυθμίσεις του κινητού:\n\n1. Ρυθμίσεις → Οθόνη κλειδώματος → Συντομεύσεις.\n2. Σε μία από τις δύο θέσεις, επίλεξε «LockNote».\n3. Στην κλειδωμένη οθόνη, πάτα το εικονίδιο στη γωνία.\n\nΕναλλακτικά (πιο αξιόπιστο): χρησιμοποίησε το πλακίδιο «LockNote» στις Γρήγορες Ρυθμίσεις.</string>
+    <string name="open_settings">Άνοιγμα Ρυθμίσεων</string>
+    <string name="settings_unavailable">Δεν βρέθηκαν οι Ρυθμίσεις</string>
+
     <!-- Tools -->
     <string name="pen">Στυλό</string>
     <string name="eraser">Γόμα</string>
