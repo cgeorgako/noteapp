@@ -77,11 +77,19 @@ class LockNoteActivity : AppCompatActivity() {
         findViewById<ImageButton>(R.id.btnClear).setOnClickListener { confirmClear() }
         findViewById<ImageButton>(R.id.btnPdf).setOnClickListener { exportPdf(share = false) }
         findViewById<ImageButton>(R.id.btnShare).setOnClickListener { exportPdf(share = true) }
+        findViewById<ImageButton>(R.id.btnSettings).setOnClickListener {
+            startActivity(android.content.Intent(this, MainActivity::class.java))
+        }
         // "Done" just closes; the note is applied to the lock screen in onPause.
         findViewById<ImageButton>(R.id.btnDone).setOnClickListener { finish() }
 
         setEraser(false)
         restoreDrawing()
+
+        // Keep the background service running so the note pad stays one tap away
+        // (persistent notification, boot restart) — best effort, no prompt here.
+        NoteService.ensureChannel(this)
+        runCatching { NoteService.start(this) }
     }
 
     override fun onPause() {

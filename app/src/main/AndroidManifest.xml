@@ -21,17 +21,8 @@
         android:theme="@style/Theme.LockNote"
         tools:targetApi="27">
 
-        <!-- Main launcher: manage the service and open the pad -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <!-- The drawing pad shown OVER the lock screen (no unlock required) -->
+        <!-- The drawing pad IS the launcher: opening the app (icon, lock-screen
+             shortcut, tile) goes straight to a new note over the lock screen. -->
         <activity
             android:name=".LockNoteActivity"
             android:exported="true"
@@ -39,7 +30,20 @@
             android:launchMode="singleTask"
             android:showWhenLocked="true"
             android:turnScreenOn="true"
-            android:theme="@style/Theme.LockNote.Fullscreen" />
+            android:theme="@style/Theme.LockNote.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+        </activity>
+
+        <!-- Settings screen (background service on/off, tile hint) -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
 
         <!-- Foreground service = "runs in the background" -->
         <service

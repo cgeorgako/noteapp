@@ -20,6 +20,7 @@
     <string name="redo">Επανάληψη</string>
     <string name="clear">Καθαρισμός</string>
     <string name="done">Τέλος</string>
+    <string name="settings">Ρυθμίσεις</string>
     <string name="confirm_clear">Καθαρισμός όλης της σημείωσης;</string>
     <string name="cancel">Άκυρο</string>
 

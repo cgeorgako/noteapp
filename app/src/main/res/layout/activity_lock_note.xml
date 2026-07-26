@@ -57,6 +57,8 @@
                 android:src="@drawable/ic_pdf" android:contentDescription="@string/export_pdf" />
             <ImageButton android:id="@+id/btnShare" style="@style/PadButton"
                 android:src="@drawable/ic_share" android:contentDescription="@string/share" />
+            <ImageButton android:id="@+id/btnSettings" style="@style/PadButton"
+                android:src="@drawable/ic_settings" android:contentDescription="@string/settings" />
             <ImageButton android:id="@+id/btnDone" style="@style/PadButtonDone"
                 android:src="@drawable/ic_done" android:contentDescription="@string/done" />
         </LinearLayout>
