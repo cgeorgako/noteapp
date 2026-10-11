@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Έξοδα</title>
+<title>Έσοδα & Έξοδα</title>
 <style>
   :root {
     --bg: #f4f5f7;
@@ -18,9 +18,11 @@
     --ok: #1f9d6b;
     --shadow: 0 1px 3px rgba(20,30,50,.08), 0 6px 20px rgba(20,30,50,.06);
     --radius: 14px;
-    /* Χρώματα κατηγοριών (για τις μπάρες) */
-    --c1:#3563e9; --c2:#1f9d6b; --c3:#e8963a; --c4:#8b5cf6; --c5:#d1435b;
-    --c6:#0ea5a5; --c7:#c026a9; --c8:#5a6474;
+    /* Χρώματα κατηγοριών εξόδων (μπάρες) */
+    --c1:#3563e9; --c2:#e8963a; --c3:#8b5cf6; --c4:#d1435b;
+    --c5:#0ea5a5; --c6:#c026a9; --c7:#5a6474; --c8:#b4791f;
+    /* Χρώματα πηγών εσόδων */
+    --i1:#1f9d6b; --i2:#0ea5a5; --i3:#2bb08a; --i4:#67b26f; --i5:#3d9970; --i6:#12b886;
   }
   :root:not([data-theme="light"]) {
     @media (prefers-color-scheme: dark) {
@@ -46,29 +48,22 @@
   }
   .wrap { max-width: 760px; margin: 0 auto; padding: 16px 16px 48px; }
 
-  header.app {
-    display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap;
-  }
+  header.app { display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
   header.app h1 { font-size:1.3rem; margin:0; display:flex; align-items:center; gap:8px; }
   header.app .spacer { flex:1 1 auto; }
   .month-nav { display:flex; align-items:center; gap:6px; }
   .month-nav .label { font-weight:600; min-width:120px; text-align:center; }
 
   .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 16px;
-    margin-bottom: 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 16px; margin-bottom: 14px;
   }
   .card h2 { font-size:1.02rem; margin:0 0 12px; display:flex; align-items:center; gap:8px; }
   .card h2 .sub { font-weight:400; color:var(--muted); font-size:.85rem; }
 
   label { display:block; font-size:.8rem; color:var(--muted); margin:0 0 4px; font-weight:600; }
-  input, select, button, textarea {
-    font: inherit; color: inherit;
-  }
+  input, select, button, textarea { font: inherit; color: inherit; }
   input, select {
     width:100%; padding:11px 12px; border-radius:10px;
     border:1px solid var(--border); background:var(--surface-2); color:var(--text);
@@ -81,13 +76,14 @@
   @media (max-width:520px){ .grid.form { grid-template-columns: 1fr; } }
 
   button {
-    cursor:pointer; border:none; border-radius:10px; padding:11px 14px; font-weight:600;
+    cursor:pointer; border-radius:10px; padding:11px 14px; font-weight:600;
     background: var(--surface-2); color: var(--text); border:1px solid var(--border);
     transition: filter .12s ease, transform .04s ease;
   }
   button:active { transform: translateY(1px); }
   button:hover { filter: brightness(.98); }
   button.primary { background: var(--primary); color: var(--primary-ink); border-color: transparent; }
+  button.ok { background: var(--ok); color:#fff; border-color: transparent; }
   button.ghost { background: transparent; }
   button.danger { color: var(--danger); }
   button.block { width:100%; }
@@ -96,31 +92,40 @@
   .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
   .row.end { justify-content:flex-end; }
 
+  /* Εναλλαγή Έξοδο/Έσοδο */
+  .toggle { display:inline-flex; background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:4px; gap:4px; }
+  .toggle button { border:none; background:transparent; padding:8px 16px; border-radius:9px; color:var(--muted); }
+  .toggle button.active[data-kind="expense"] { background:var(--danger); color:#fff; }
+  .toggle button.active[data-kind="income"] { background:var(--ok); color:#fff; }
+
   /* Mic */
   .mic-wrap { display:flex; flex-direction:column; align-items:center; gap:10px; }
-  .mic-btn {
-    width:76px; height:76px; border-radius:50%; font-size:1.8rem; display:grid; place-items:center;
-    background: var(--primary); color: var(--primary-ink); border:none;
-  }
+  .mic-btn { width:76px; height:76px; border-radius:50%; font-size:1.8rem; display:grid; place-items:center;
+    background: var(--primary); color: var(--primary-ink); border:none; }
   .mic-btn.listening { animation: pulse 1.1s infinite; background: var(--danger); }
   @keyframes pulse { 0%{ box-shadow:0 0 0 0 rgba(209,67,91,.5);} 70%{ box-shadow:0 0 0 16px rgba(209,67,91,0);} 100%{ box-shadow:0 0 0 0 rgba(209,67,91,0);} }
   .mic-status { color:var(--muted); font-size:.9rem; min-height:1.4em; text-align:center; }
   .mic-hint { color:var(--muted); font-size:.8rem; text-align:center; }
 
-  .totals { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .totals { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
   @media (max-width:520px){ .totals { grid-template-columns:1fr; } }
   .stat { background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:14px; }
   .stat .k { color:var(--muted); font-size:.8rem; font-weight:600; }
-  .stat .v { font-size:1.6rem; font-weight:700; margin-top:4px; }
-  .stat .v.sum { color:var(--danger); }
+  .stat .v { font-size:1.5rem; font-weight:700; margin-top:4px; }
+  .stat .v.inc { color:var(--ok); }
+  .stat .v.exp { color:var(--danger); }
 
+  .bd-title { font-size:.8rem; color:var(--muted); font-weight:700; margin:14px 0 8px; text-transform:uppercase; letter-spacing:.03em; }
   .cat-list { display:flex; flex-direction:column; gap:10px; }
   .cat-row .top { display:flex; justify-content:space-between; font-size:.92rem; margin-bottom:5px; }
   .cat-row .amt { font-weight:700; }
   .bar { height:9px; border-radius:6px; background:var(--surface-2); overflow:hidden; }
   .bar > span { display:block; height:100%; border-radius:6px; }
 
-  table { width:100%; border-collapse:collapse; }
+  .filters { display:flex; gap:6px; margin-bottom:10px; }
+  .filters button { padding:6px 12px; font-size:.85rem; }
+  .filters button.active { background:var(--primary); color:var(--primary-ink); border-color:transparent; }
+
   .tx { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); }
   .tx:last-child { border-bottom:none; }
   .tx .dot { width:10px; height:10px; border-radius:50%; flex:0 0 auto; }
@@ -128,6 +133,8 @@
   .tx .info .cat { font-weight:600; }
   .tx .info .meta { color:var(--muted); font-size:.8rem; }
   .tx .amt { font-weight:700; white-space:nowrap; }
+  .tx .amt.inc { color:var(--ok); }
+  .tx .amt.exp { color:var(--danger); }
   .tx .fixed-tag { font-size:.68rem; background:var(--surface-2); border:1px solid var(--border); border-radius:6px; padding:1px 6px; color:var(--muted); }
   .tx button.del { padding:6px 9px; font-size:.85rem; }
 
@@ -156,7 +163,7 @@
 <div class="wrap">
 
   <header class="app">
-    <h1>💶 Έξοδα</h1>
+    <h1>💶 Έσοδα &amp; Έξοδα</h1>
     <div class="spacer"></div>
     <div class="month-nav">
       <button class="icon ghost" id="prevMonth" aria-label="Προηγούμενος μήνας">◀</button>
@@ -171,22 +178,26 @@
     <h2>🎤 Φωνητική καταχώρηση <span class="sub">(Chrome)</span></h2>
     <div class="mic-wrap">
       <button class="mic-btn" id="micBtn" aria-label="Μίλα">🎤</button>
-      <div class="mic-status" id="micStatus">Πάτα και πες π.χ. «σούπερ μάρκετ 35 ευρώ»</div>
+      <div class="mic-status" id="micStatus">Πες π.χ. «σούπερ μάρκετ 35 ευρώ» ή «εισέπραξα αμοιβή 500 ευρώ»</div>
       <div class="mic-hint" id="micHint"></div>
     </div>
   </section>
 
   <!-- ΧΕΙΡΟΚΙΝΗΤΗ ΦΟΡΜΑ -->
   <section class="card">
-    <h2>➕ Νέο έξοδο</h2>
-    <form id="expenseForm">
+    <h2 id="formTitle">➕ Νέα κίνηση</h2>
+    <div class="toggle" id="kindToggle" style="margin-bottom:12px;">
+      <button type="button" data-kind="expense" class="active">− Έξοδο</button>
+      <button type="button" data-kind="income">+ Έσοδο</button>
+    </div>
+    <form id="entryForm">
       <div class="grid form">
         <div>
           <label for="amount">Ποσό (€)</label>
           <input id="amount" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0,00" required />
         </div>
         <div>
-          <label for="category">Κατηγορία</label>
+          <label for="category" id="catLabel">Κατηγορία</label>
           <select id="category"></select>
         </div>
         <div class="full">
@@ -203,7 +214,7 @@
         </div>
       </div>
       <div class="row end" style="margin-top:12px;">
-        <button type="submit" class="primary">Καταχώρηση</button>
+        <button type="submit" class="primary" id="submitBtn">Καταχώρηση</button>
       </div>
     </form>
   </section>
@@ -212,53 +223,66 @@
   <section class="card">
     <h2>📊 Σύνολα μήνα</h2>
     <div class="totals">
-      <div class="stat"><div class="k">Συνολικά έξοδα</div><div class="v sum" id="totalMonth">0,00 €</div></div>
-      <div class="stat"><div class="k">Κινήσεις</div><div class="v" id="countMonth">0</div></div>
+      <div class="stat"><div class="k">Έσοδα</div><div class="v inc" id="totalInc">0,00 €</div></div>
+      <div class="stat"><div class="k">Έξοδα</div><div class="v exp" id="totalExp">0,00 €</div></div>
+      <div class="stat"><div class="k">Υπόλοιπο</div><div class="v" id="totalNet">0,00 €</div></div>
     </div>
-    <div style="height:14px"></div>
-    <div class="cat-list" id="catBreakdown"></div>
+    <div id="expBreakdownWrap">
+      <div class="bd-title">Έξοδα ανά κατηγορία</div>
+      <div class="cat-list" id="expBreakdown"></div>
+    </div>
+    <div id="incBreakdownWrap">
+      <div class="bd-title">Έσοδα ανά πηγή</div>
+      <div class="cat-list" id="incBreakdown"></div>
+    </div>
   </section>
 
   <!-- ΚΙΝΗΣΕΙΣ -->
   <section class="card">
     <h2>🧾 Κινήσεις μήνα</h2>
+    <div class="filters" id="filters">
+      <button data-f="all" class="active">Όλα</button>
+      <button data-f="income">Έσοδα</button>
+      <button data-f="expense">Έξοδα</button>
+    </div>
     <div id="txList"></div>
   </section>
 
-  <!-- ΠΑΓΙΑ -->
+  <!-- ΠΑΓΙΑ ΕΞΟΔΑ -->
   <section class="card">
     <h2>📌 Πάγια έξοδα <span class="sub">(επαναλαμβανόμενα)</span></h2>
-    <p style="margin-top:0;color:var(--muted);font-size:.9rem;">
-      Όρισε εδώ τα σταθερά μηνιαία έξοδα (ενοίκιο, ρεύμα, συνδρομές…). Με το κουμπί «Εφαρμογή στον μήνα»
-      προστίθενται αυτόματα στον τρέχοντα μήνα.
-    </p>
-    <form id="fixedForm">
+    <form id="fixedExpForm">
       <div class="grid form">
-        <div>
-          <label for="fAmount">Ποσό (€)</label>
-          <input id="fAmount" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0,00" required />
-        </div>
-        <div>
-          <label for="fCategory">Κατηγορία</label>
-          <select id="fCategory"></select>
-        </div>
-        <div class="full">
-          <label for="fDesc">Περιγραφή</label>
-          <input id="fDesc" type="text" placeholder="π.χ. Ενοίκιο" />
-        </div>
-        <div>
-          <label for="fDay">Ημέρα μήνα</label>
-          <input id="fDay" type="number" min="1" max="31" value="1" />
-        </div>
+        <div><label for="feAmount">Ποσό (€)</label><input id="feAmount" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0,00" required /></div>
+        <div><label for="feCategory">Κατηγορία</label><select id="feCategory"></select></div>
+        <div class="full"><label for="feDesc">Περιγραφή</label><input id="feDesc" type="text" placeholder="π.χ. Ενοίκιο" /></div>
+        <div><label for="feDay">Ημέρα μήνα</label><input id="feDay" type="number" min="1" max="31" value="1" /></div>
       </div>
-      <div class="row end" style="margin-top:12px;">
-        <button type="submit">Προσθήκη παγίου</button>
-      </div>
+      <div class="row end" style="margin-top:12px;"><button type="submit">Προσθήκη παγίου εξόδου</button></div>
     </form>
-    <div id="fixedList" style="margin-top:8px;"></div>
+    <div id="fixedExpList" style="margin-top:8px;"></div>
     <div class="row" style="margin-top:12px;">
-      <button class="primary" id="applyFixed">⤵ Εφαρμογή παγίων στον μήνα</button>
-      <span class="sub" id="fixedTotal" style="color:var(--muted);"></span>
+      <button class="primary" id="applyFixedExp">⤵ Εφαρμογή στον μήνα</button>
+      <span class="sub" id="fixedExpTotal" style="color:var(--muted);"></span>
+    </div>
+  </section>
+
+  <!-- ΠΑΓΙΑ ΕΣΟΔΑ -->
+  <section class="card">
+    <h2>📈 Πάγια έσοδα <span class="sub">(επαναλαμβανόμενα)</span></h2>
+    <form id="fixedIncForm">
+      <div class="grid form">
+        <div><label for="fiAmount">Ποσό (€)</label><input id="fiAmount" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0,00" required /></div>
+        <div><label for="fiCategory">Πηγή</label><select id="fiCategory"></select></div>
+        <div class="full"><label for="fiDesc">Περιγραφή</label><input id="fiDesc" type="text" placeholder="π.χ. Πάγια αμοιβή" /></div>
+        <div><label for="fiDay">Ημέρα μήνα</label><input id="fiDay" type="number" min="1" max="31" value="1" /></div>
+      </div>
+      <div class="row end" style="margin-top:12px;"><button type="submit">Προσθήκη παγίου εσόδου</button></div>
+    </form>
+    <div id="fixedIncList" style="margin-top:8px;"></div>
+    <div class="row" style="margin-top:12px;">
+      <button class="ok" id="applyFixedInc">⤵ Εφαρμογή στον μήνα</button>
+      <span class="sub" id="fixedIncTotal" style="color:var(--muted);"></span>
     </div>
   </section>
 
@@ -272,12 +296,12 @@
     </div>
     <p style="color:var(--muted);font-size:.82rem;margin-bottom:0;">
       Τα δεδομένα αποθηκεύονται τοπικά στον browser αυτής της συσκευής. Για μεταφορά/αντίγραφο
-      (π.χ. ανέβασμα στο Google Drive) χρησιμοποίησε την Εξαγωγή.
+      (π.χ. Google Drive) χρησιμοποίησε την Εξαγωγή.
     </p>
   </section>
 
   <div class="foot">
-    Για να δουλέψει το μικρόφωνο, άνοιξε τη σελίδα σε <strong>Chrome</strong> μέσω <code>https://</code> ή <code>localhost</code>.
+    Για το μικρόφωνο, άνοιξε τη σελίδα σε <strong>Chrome</strong> μέσω <code>https://</code> ή <code>localhost</code>.
   </div>
 </div>
 
@@ -293,10 +317,14 @@
     "Δάνειο","Μισθοδοσία","Ασφάλιση/ΕΦΚΑ",
     "Υγεία","Ψυχαγωγία","Ρούχα","Συνδρομές","Παιδιά","Σπίτι","Άλλα"
   ];
-  // Προκαθορισμένα πάγια: κενά στη δημόσια έκδοση (δεν αποθηκεύονται προσωπικά
-  // ποσά στον κώδικα). Τα δικά σου πάγια τα φορτώνεις με Εισαγωγή αρχείου .json.
+  var DEFAULT_INCOME_CATS = [
+    "Αμοιβές έργων","Προκαταβολές","Ενοίκια","Επιδοτήσεις","Τόκοι","Μισθός","Άλλα έσοδα"
+  ];
+  // Κενά στη δημόσια έκδοση — τα δικά σου πάγια φορτώνονται με Εισαγωγή .json
   var DEFAULT_FIXED = [];
-  // Λέξεις-κλειδιά -> κατηγορία, για αναγνώριση από τη φωνή
+  var DEFAULT_FIXED_INCOME = [];
+
+  // Λέξεις-κλειδιά -> κατηγορία ΕΞΟΔΟΥ
   var CAT_KEYWORDS = {
     "Σούπερ μάρκετ": ["σουπερ","μαρκετ","super","market","ψωνια","σκλαβενιτης","λιντλ","lidl","μασουτης","γαλακτοπωλειο","μανάβικο","μαναβικο","τρόφιμα","τροφιμα","παντοπωλειο"],
     "Εστίαση": ["καφε","καφες","εστιατοριο","ταβερνα","φαγητο","delivery","ντελιβερι","σουβλακι","πιτσα","μπαρ","ποτο","σνακ","φραπε","μπυρα","μπύρα"],
@@ -304,7 +332,7 @@
     "Λογαριασμοί": ["ρευμα","ρεύμα","δεη","νερο","νερό","τηλεφωνο","τηλέφωνο","κινητο","κινητό","ιντερνετ","internet","κοινοχρηστα","κοινόχρηστα","λογαριασμος","λογαριασμός"],
     "Ενοίκιο": ["ενοικιο","ενοίκιο","νοικι"],
     "Δάνειο": ["δανειο","δάνειο","δοση","δόση"],
-    "Μισθοδοσία": ["μισθος","μισθός","μισθοδοσια","μισθοδοσία","ικα","υπαλληλος","υπάλληλος"],
+    "Μισθοδοσία": ["μισθοδοσια","μισθοδοσία","ικα","υπαλληλος","υπάλληλος"],
     "Ασφάλιση/ΕΦΚΑ": ["εφκα","ασφαλεια","ασφάλεια","ασφαλιση","ασφάλιση","ταμειο","ταμείο","εισφορες","εισφορές"],
     "Υγεία": ["φαρμακειο","φαρμακείο","φαρμακο","φάρμακο","γιατρος","γιατρός","νοσοκομειο","οδοντιατρος","εξεταση","εξέταση"],
     "Ψυχαγωγία": ["σινεμα","σινεμά","κινηματογραφος","θεατρο","θέατρο","συναυλια","παιχνιδι","gaming","βιβλιο","βιβλίο","εκδρομη","εκδρομή"],
@@ -313,6 +341,17 @@
     "Παιδιά": ["παιδι","παιδί","παιδικο","σχολειο","σχολείο","φροντιστηριο","φροντιστήριο","παιχνιδια"],
     "Σπίτι": ["σπιτι","σπίτι","επιπλα","έπιπλα","ikea","εργαλεια","μαστορας","επισκευη","επισκευή","καθαριστικα"]
   };
+  // Λέξεις-κλειδιά -> πηγή ΕΣΟΔΟΥ
+  var INCOME_KEYWORDS = {
+    "Αμοιβές έργων": ["αμοιβη","αμοιβή","εργο","έργο","τιμολογιο","τιμολόγιο","μελετη","μελέτη","αυτοψια","αυτοψία","τοπογραφικο","τοπογραφικό","αδεια","άδεια"],
+    "Προκαταβολές": ["προκαταβολη","προκαταβολή"],
+    "Ενοίκια": ["ενοικιο","ενοίκιο","ενοικια","ενοίκια","μισθωμα","μίσθωμα"],
+    "Επιδοτήσεις": ["επιδοτηση","επιδότηση","εσπα","επιχορηγηση","επιχορήγηση","αποζημιωση"],
+    "Τόκοι": ["τοκοι","τόκοι","τοκος","τόκος","μερισμα","μέρισμα"],
+    "Μισθός": ["μισθος","μισθός"]
+  };
+  // Λέξεις που σημαίνουν ΕΣΟΔΟ
+  var INCOME_TRIGGERS = ["εσοδο","έσοδο","εσοδα","έσοδα","εισπραξη","είσπραξη","εισπραξα","εισέπραξα","εισπραξα","πληρωθηκα","πληρώθηκα","μπηκαν","μπήκαν","εισπραχθηκαν","κερδος","κέρδος","εισπρξη"];
 
   var data = load();
 
@@ -322,12 +361,13 @@
       if (raw) {
         var d = JSON.parse(raw);
         if (!d.categories || !d.categories.length) d.categories = DEFAULT_CATS.slice();
+        if (!d.incomeCategories || !d.incomeCategories.length) d.incomeCategories = DEFAULT_INCOME_CATS.slice();
         if (!Array.isArray(d.expenses)) d.expenses = [];
+        if (!Array.isArray(d.incomes)) d.incomes = [];
         if (!Array.isArray(d.fixed)) d.fixed = [];
-        // Μία φορά: σπορά των προκαθορισμένων παγίων σε παλιά/κενά δεδομένα
+        if (!Array.isArray(d.fixedIncome)) d.fixedIncome = [];
         if (!d._seeded && d.fixed.length === 0) {
           d.fixed = DEFAULT_FIXED.map(function (f) { return Object.assign({}, f); });
-          // Βεβαιώσου ότι υπάρχουν και οι νέες κατηγορίες
           DEFAULT_CATS.forEach(function (c) { if (d.categories.indexOf(c) < 0) d.categories.push(c); });
         }
         d._seeded = true;
@@ -336,8 +376,10 @@
     } catch (e) { /* αγνόησε κατεστραμμένα δεδομένα */ }
     return {
       categories: DEFAULT_CATS.slice(),
-      expenses: [],
+      incomeCategories: DEFAULT_INCOME_CATS.slice(),
+      expenses: [], incomes: [],
       fixed: DEFAULT_FIXED.map(function (f) { return Object.assign({}, f); }),
+      fixedIncome: DEFAULT_FIXED_INCOME.map(function (f) { return Object.assign({}, f); }),
       _seeded: true
     };
   }
@@ -349,11 +391,14 @@
   // ---------- Βοηθητικά ----------
   var $ = function (id) { return document.getElementById(id); };
   var MONTHS = ["Ιανουάριος","Φεβρουάριος","Μάρτιος","Απρίλιος","Μάιος","Ιούνιος","Ιούλιος","Αύγουστος","Σεπτέμβριος","Οκτώβριος","Νοέμβριος","Δεκέμβριος"];
-  var CAT_COLORS = ["var(--c1)","var(--c2)","var(--c3)","var(--c4)","var(--c5)","var(--c6)","var(--c7)","var(--c8)"];
+  var EXP_COLORS = ["var(--c1)","var(--c2)","var(--c3)","var(--c4)","var(--c5)","var(--c6)","var(--c7)","var(--c8)"];
+  var INC_COLORS = ["var(--i1)","var(--i2)","var(--i3)","var(--i4)","var(--i5)","var(--i6)"];
 
   var now = new Date();
   var viewYear = now.getFullYear();
-  var viewMonth = now.getMonth(); // 0-11
+  var viewMonth = now.getMonth();
+  var formKind = "expense";   // "expense" | "income"
+  var txFilter = "all";       // "all" | "income" | "expense"
 
   function fmt(n) {
     return (Number(n) || 0).toLocaleString("el-GR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
@@ -361,108 +406,107 @@
   function monthKey(y, m) { return y + "-" + String(m + 1).padStart(2, "0"); }
   function pad(n){ return String(n).padStart(2,"0"); }
   function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
-  function colorForCat(cat) {
-    var idx = data.categories.indexOf(cat);
-    if (idx < 0) idx = Math.abs(hash(cat)) % CAT_COLORS.length;
-    return CAT_COLORS[idx % CAT_COLORS.length];
-  }
   function hash(s){ var h=0; for(var i=0;i<s.length;i++){ h=(h<<5)-h+s.charCodeAt(i); h|=0; } return h; }
+  function colorExp(cat){ return EXP_COLORS[Math.abs(hash(cat)) % EXP_COLORS.length]; }
+  function colorInc(cat){ return INC_COLORS[Math.abs(hash(cat)) % INC_COLORS.length]; }
+  function todayStr() { var d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
 
-  function currentMonthExpenses() {
+  function inMonth(arr) {
     var key = monthKey(viewYear, viewMonth);
-    return data.expenses.filter(function (e) { return (e.date || "").slice(0, 7) === key; });
+    return arr.filter(function (e) { return (e.date || "").slice(0, 7) === key; });
   }
 
-  // ---------- Κατηγορίες (dropdowns) ----------
-  function refreshCategoryDropdowns() {
-    [$("category"), $("fCategory")].forEach(function (sel) {
-      var prev = sel.value;
-      sel.innerHTML = "";
-      data.categories.forEach(function (c) {
-        var o = document.createElement("option");
-        o.value = c; o.textContent = c; sel.appendChild(o);
-      });
-      if (data.categories.indexOf(prev) >= 0) sel.value = prev;
-    });
+  // ---------- Dropdowns κατηγοριών ----------
+  function fillSelect(sel, list) {
+    var prev = sel.value; sel.innerHTML = "";
+    list.forEach(function (c) { var o = document.createElement("option"); o.value = c; o.textContent = c; sel.appendChild(o); });
+    if (list.indexOf(prev) >= 0) sel.value = prev;
   }
-  function ensureCategory(cat) {
+  function refreshDropdowns() {
+    fillSelect($("category"), formKind === "income" ? data.incomeCategories : data.categories);
+    fillSelect($("feCategory"), data.categories);
+    fillSelect($("fiCategory"), data.incomeCategories);
+  }
+  function ensureCategory(cat, income) {
     cat = (cat || "").trim();
-    if (cat && data.categories.indexOf(cat) < 0) {
-      data.categories.push(cat);
-      refreshCategoryDropdowns();
-    }
+    var list = income ? data.incomeCategories : data.categories;
+    if (cat && list.indexOf(cat) < 0) { list.push(cat); refreshDropdowns(); }
     return cat;
   }
 
   // ---------- Προβολή ----------
-  function renderMonthLabel() {
-    $("monthLabel").textContent = MONTHS[viewMonth] + " " + viewYear;
-  }
+  function renderMonthLabel() { $("monthLabel").textContent = MONTHS[viewMonth] + " " + viewYear; }
 
-  function renderTotals() {
-    var exps = currentMonthExpenses();
-    var total = exps.reduce(function (s, e) { return s + (Number(e.amount) || 0); }, 0);
-    $("totalMonth").textContent = fmt(total);
-    $("countMonth").textContent = String(exps.length);
+  function sumArr(arr){ return arr.reduce(function (s, e) { return s + (Number(e.amount) || 0); }, 0); }
 
-    // Ανά κατηγορία
+  function renderBreakdown(boxId, wrapId, items, total, colorFn) {
     var byCat = {};
-    exps.forEach(function (e) { byCat[e.category] = (byCat[e.category] || 0) + (Number(e.amount) || 0); });
+    items.forEach(function (e) { byCat[e.category] = (byCat[e.category] || 0) + (Number(e.amount) || 0); });
     var rows = Object.keys(byCat).map(function (c) { return { cat: c, sum: byCat[c] }; })
       .sort(function (a, b) { return b.sum - a.sum; });
-
-    var box = $("catBreakdown");
+    var box = $(boxId);
     box.innerHTML = "";
-    if (!rows.length) { box.innerHTML = '<div class="empty">Καμία κίνηση αυτόν τον μήνα.</div>'; return; }
+    $(wrapId).style.display = rows.length ? "" : "none";
     rows.forEach(function (r) {
       var pct = total > 0 ? Math.round(r.sum / total * 100) : 0;
-      var div = document.createElement("div");
-      div.className = "cat-row";
-      var color = colorForCat(r.cat);
+      var div = document.createElement("div"); div.className = "cat-row";
       div.innerHTML =
         '<div class="top"><span>' + esc(r.cat) + ' <span style="color:var(--muted)">' + pct + '%</span></span>' +
         '<span class="amt">' + fmt(r.sum) + '</span></div>' +
-        '<div class="bar"><span style="width:' + pct + '%;background:' + color + '"></span></div>';
+        '<div class="bar"><span style="width:' + pct + '%;background:' + colorFn(r.cat) + '"></span></div>';
       box.appendChild(div);
     });
+  }
+
+  function renderTotals() {
+    var exps = inMonth(data.expenses), incs = inMonth(data.incomes);
+    var te = sumArr(exps), ti = sumArr(incs), net = ti - te;
+    $("totalInc").textContent = fmt(ti);
+    $("totalExp").textContent = fmt(te);
+    var netEl = $("totalNet");
+    netEl.textContent = (net >= 0 ? "" : "−") + fmt(Math.abs(net)).replace("−","");
+    netEl.className = "v " + (net >= 0 ? "inc" : "exp");
+    renderBreakdown("expBreakdown", "expBreakdownWrap", exps, te, colorExp);
+    renderBreakdown("incBreakdown", "incBreakdownWrap", incs, ti, colorInc);
   }
 
   function renderTxList() {
-    var exps = currentMonthExpenses().slice().sort(function (a, b) {
-      return (b.date || "").localeCompare(a.date || "") || (b.created || 0) - (a.created || 0);
+    var list = [];
+    if (txFilter !== "income") inMonth(data.expenses).forEach(function (e) { list.push({ e: e, kind: "expense" }); });
+    if (txFilter !== "expense") inMonth(data.incomes).forEach(function (e) { list.push({ e: e, kind: "income" }); });
+    list.sort(function (a, b) {
+      return (b.e.date || "").localeCompare(a.e.date || "") || (b.e.created || 0) - (a.e.created || 0);
     });
-    var box = $("txList");
-    box.innerHTML = "";
-    if (!exps.length) { box.innerHTML = '<div class="empty">Δεν υπάρχουν κινήσεις. Πρόσθεσε μία παραπάνω ή με φωνή.</div>'; return; }
-    exps.forEach(function (e) {
-      var div = document.createElement("div");
-      div.className = "tx";
+    var box = $("txList"); box.innerHTML = "";
+    if (!list.length) { box.innerHTML = '<div class="empty">Δεν υπάρχουν κινήσεις.</div>'; return; }
+    list.forEach(function (it) {
+      var e = it.e, inc = it.kind === "income";
+      var div = document.createElement("div"); div.className = "tx";
       var d = e.date ? e.date.split("-").reverse().join("/") : "";
+      var dot = inc ? "var(--ok)" : colorExp(e.category);
       div.innerHTML =
-        '<span class="dot" style="background:' + colorForCat(e.category) + '"></span>' +
+        '<span class="dot" style="background:' + dot + '"></span>' +
         '<div class="info"><div class="cat">' + esc(e.category) +
           (e.fromFixed ? ' <span class="fixed-tag">πάγιο</span>' : '') + '</div>' +
           '<div class="meta">' + d + (e.desc ? ' · ' + esc(e.desc) : '') + '</div></div>' +
-        '<span class="amt">' + fmt(e.amount) + '</span>' +
-        '<button class="del danger ghost" data-id="' + e.id + '" aria-label="Διαγραφή">🗑</button>';
+        '<span class="amt ' + (inc ? "inc" : "exp") + '">' + (inc ? "+" : "−") + fmt(e.amount) + '</span>' +
+        '<button class="del danger ghost" data-id="' + e.id + '" data-kind="' + it.kind + '" aria-label="Διαγραφή">🗑</button>';
       box.appendChild(div);
     });
     Array.prototype.forEach.call(box.querySelectorAll("button.del"), function (b) {
-      b.addEventListener("click", function () { deleteExpense(b.getAttribute("data-id")); });
+      b.addEventListener("click", function () { deleteEntry(b.getAttribute("data-kind"), b.getAttribute("data-id")); });
     });
   }
 
-  function renderFixed() {
-    var box = $("fixedList");
+  function renderFixedList(listName, boxId, totalId, colorFn) {
+    var box = $(boxId), arr = data[listName];
     box.innerHTML = "";
-    if (!data.fixed.length) {
-      box.innerHTML = '<div class="empty">Δεν έχεις ορίσει πάγια ακόμη.</div>';
-    } else {
-      data.fixed.forEach(function (f) {
-        var div = document.createElement("div");
-        div.className = "fixed-item";
+    if (!arr.length) { box.innerHTML = '<div class="empty">Δεν έχεις ορίσει ακόμη.</div>'; }
+    else {
+      arr.forEach(function (f) {
+        var div = document.createElement("div"); div.className = "fixed-item";
         div.innerHTML =
-          '<span class="dot" style="background:' + colorForCat(f.category) + '"></span>' +
+          '<span class="dot" style="background:' + colorFn(f.category) + '"></span>' +
           '<div class="info"><div>' + esc(f.desc || f.category) + '</div>' +
             '<div class="meta">' + esc(f.category) + ' · ημ. ' + (f.day || 1) + '</div></div>' +
           '<span class="amt">' + fmt(f.amount) + '</span>' +
@@ -471,18 +515,20 @@
       });
       Array.prototype.forEach.call(box.querySelectorAll("button.del"), function (b) {
         b.addEventListener("click", function () {
-          data.fixed = data.fixed.filter(function (x) { return x.id !== b.getAttribute("data-id"); });
-          save(); renderFixed();
+          data[listName] = data[listName].filter(function (x) { return x.id !== b.getAttribute("data-id"); });
+          save(); renderFixedAll();
         });
       });
     }
-    var ft = data.fixed.reduce(function (s, f) { return s + (Number(f.amount) || 0); }, 0);
-    $("fixedTotal").textContent = data.fixed.length ? ("Σύνολο παγίων: " + fmt(ft)) : "";
+    var ft = sumArr(arr);
+    $(totalId).textContent = arr.length ? ("Σύνολο: " + fmt(ft)) : "";
+  }
+  function renderFixedAll() {
+    renderFixedList("fixed", "fixedExpList", "fixedExpTotal", colorExp);
+    renderFixedList("fixedIncome", "fixedIncList", "fixedIncTotal", colorInc);
   }
 
-  function renderAll() {
-    renderMonthLabel(); renderTotals(); renderTxList(); renderFixed();
-  }
+  function renderAll() { renderMonthLabel(); renderTotals(); renderTxList(); renderFixedAll(); }
 
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
@@ -491,84 +537,101 @@
   }
 
   // ---------- Ενέργειες ----------
-  function addExpense(amount, category, desc, date, fromFixed) {
-    data.expenses.push({
-      id: uid(), amount: Number(amount) || 0, category: category || "Άλλα",
-      desc: desc || "", date: date, created: Date.now(), fromFixed: !!fromFixed
-    });
+  function addEntry(kind, amount, category, desc, date, fromFixed, fixedRef) {
+    var rec = { id: uid(), amount: Number(amount) || 0, category: category, desc: desc || "", date: date, created: Date.now() };
+    if (fromFixed) { rec.fromFixed = true; rec.fixedRef = fixedRef; }
+    (kind === "income" ? data.incomes : data.expenses).push(rec);
     save(); renderAll();
   }
-  function deleteExpense(id) {
-    data.expenses = data.expenses.filter(function (e) { return e.id !== id; });
-    save(); renderAll();
-    toast("Διαγράφηκε");
+  function deleteEntry(kind, id) {
+    var key = kind === "income" ? "incomes" : "expenses";
+    data[key] = data[key].filter(function (e) { return e.id !== id; });
+    save(); renderAll(); toast("Διαγράφηκε");
   }
 
-  // ---------- Φόρμα εξόδου ----------
-  $("expenseForm").addEventListener("submit", function (ev) {
-    ev.preventDefault();
-    var amt = parseFloat(String($("amount").value).replace(",", "."));
-    if (!(amt > 0)) { toast("Βάλε έγκυρο ποσό"); return; }
-    var cat = $("category").value;
-    addExpense(amt, cat, $("desc").value.trim(), $("date").value);
-    $("amount").value = ""; $("desc").value = "";
-    toast("✓ Καταχωρήθηκε " + fmt(amt));
-  });
-  // Νέα κατηγορία με Enter
-  $("newcat").addEventListener("keydown", function (ev) {
-    if (ev.key === "Enter") {
-      ev.preventDefault();
-      var c = ensureCategory($("newcat").value);
-      if (c) { $("category").value = c; $("newcat").value = ""; toast('Προστέθηκε κατηγορία «' + c + '»'); }
-    }
-  });
-
-  // ---------- Πάγια ----------
-  $("fixedForm").addEventListener("submit", function (ev) {
-    ev.preventDefault();
-    var amt = parseFloat(String($("fAmount").value).replace(",", "."));
-    if (!(amt > 0)) { toast("Βάλε έγκυρο ποσό"); return; }
-    var day = Math.min(31, Math.max(1, parseInt($("fDay").value, 10) || 1));
-    data.fixed.push({
-      id: uid(), amount: amt, category: $("fCategory").value,
-      desc: $("fDesc").value.trim(), day: day
-    });
-    save(); renderFixed();
-    $("fAmount").value = ""; $("fDesc").value = "";
-    toast("✓ Προστέθηκε πάγιο");
-  });
-
-  $("applyFixed").addEventListener("click", function () {
-    if (!data.fixed.length) { toast("Δεν υπάρχουν πάγια να εφαρμοστούν"); return; }
+  function applyFixed(listName, targetKind, colorLabel) {
+    var arr = data[listName];
+    if (!arr.length) { toast("Δεν υπάρχουν πάγια να εφαρμοστούν"); return; }
     var key = monthKey(viewYear, viewMonth);
-    // Αποφυγή διπλοεγγραφής: έλεγξε ποια πάγια υπάρχουν ήδη αυτόν τον μήνα
+    var targetArr = targetKind === "income" ? data.incomes : data.expenses;
     var existing = {};
-    data.expenses.forEach(function (e) {
-      if (e.fromFixed && (e.date || "").slice(0, 7) === key) existing[e.fixedRef] = true;
-    });
-    var added = 0;
-    var lastDay = new Date(viewYear, viewMonth + 1, 0).getDate();
-    data.fixed.forEach(function (f) {
+    targetArr.forEach(function (e) { if (e.fromFixed && (e.date || "").slice(0, 7) === key) existing[e.fixedRef] = true; });
+    var added = 0, lastDay = new Date(viewYear, viewMonth + 1, 0).getDate();
+    arr.forEach(function (f) {
       if (existing[f.id]) return;
-      var d = Math.min(f.day || 1, lastDay);
-      var date = viewYear + "-" + pad(viewMonth + 1) + "-" + pad(d);
-      data.expenses.push({
-        id: uid(), amount: Number(f.amount) || 0, category: f.category,
-        desc: f.desc || "", date: date, created: Date.now(), fromFixed: true, fixedRef: f.id
-      });
+      var day = Math.min(f.day || 1, lastDay);
+      var date = viewYear + "-" + pad(viewMonth + 1) + "-" + pad(day);
+      targetArr.push({ id: uid(), amount: Number(f.amount) || 0, category: f.category, desc: f.desc || "", date: date, created: Date.now(), fromFixed: true, fixedRef: f.id });
       added++;
     });
     save(); renderAll();
     toast(added ? ("✓ Προστέθηκαν " + added + " πάγια") : "Τα πάγια υπάρχουν ήδη αυτόν τον μήνα");
+  }
+
+  // ---------- Εναλλαγή Έξοδο/Έσοδο ----------
+  function setKind(kind) {
+    formKind = kind;
+    Array.prototype.forEach.call($("kindToggle").children, function (b) {
+      b.classList.toggle("active", b.getAttribute("data-kind") === kind);
+    });
+    $("catLabel").textContent = kind === "income" ? "Πηγή" : "Κατηγορία";
+    $("submitBtn").className = kind === "income" ? "ok" : "primary";
+    $("submitBtn").textContent = kind === "income" ? "Καταχώρηση εσόδου" : "Καταχώρηση εξόδου";
+    refreshDropdowns();
+  }
+  Array.prototype.forEach.call($("kindToggle").children, function (b) {
+    b.addEventListener("click", function () { setKind(b.getAttribute("data-kind")); });
+  });
+
+  // ---------- Φόρμα κίνησης ----------
+  $("entryForm").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var amt = parseFloat(String($("amount").value).replace(",", "."));
+    if (!(amt > 0)) { toast("Βάλε έγκυρο ποσό"); return; }
+    addEntry(formKind, amt, $("category").value, $("desc").value.trim(), $("date").value);
+    $("amount").value = ""; $("desc").value = "";
+    toast((formKind === "income" ? "✓ Έσοδο " : "✓ Έξοδο ") + fmt(amt));
+  });
+  $("newcat").addEventListener("keydown", function (ev) {
+    if (ev.key === "Enter") {
+      ev.preventDefault();
+      var c = ensureCategory($("newcat").value, formKind === "income");
+      if (c) { $("category").value = c; $("newcat").value = ""; toast('Προστέθηκε «' + c + '»'); }
+    }
+  });
+
+  // ---------- Φόρμες παγίων ----------
+  $("fixedExpForm").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var amt = parseFloat(String($("feAmount").value).replace(",", "."));
+    if (!(amt > 0)) { toast("Βάλε έγκυρο ποσό"); return; }
+    var day = Math.min(31, Math.max(1, parseInt($("feDay").value, 10) || 1));
+    data.fixed.push({ id: uid(), amount: amt, category: $("feCategory").value, desc: $("feDesc").value.trim(), day: day });
+    save(); renderFixedAll(); $("feAmount").value = ""; $("feDesc").value = ""; toast("✓ Πάγιο έξοδο");
+  });
+  $("fixedIncForm").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var amt = parseFloat(String($("fiAmount").value).replace(",", "."));
+    if (!(amt > 0)) { toast("Βάλε έγκυρο ποσό"); return; }
+    var day = Math.min(31, Math.max(1, parseInt($("fiDay").value, 10) || 1));
+    data.fixedIncome.push({ id: uid(), amount: amt, category: $("fiCategory").value, desc: $("fiDesc").value.trim(), day: day });
+    save(); renderFixedAll(); $("fiAmount").value = ""; $("fiDesc").value = ""; toast("✓ Πάγιο έσοδο");
+  });
+  $("applyFixedExp").addEventListener("click", function () { applyFixed("fixed", "expense"); });
+  $("applyFixedInc").addEventListener("click", function () { applyFixed("fixedIncome", "income"); });
+
+  // ---------- Φίλτρα κινήσεων ----------
+  Array.prototype.forEach.call($("filters").children, function (b) {
+    b.addEventListener("click", function () {
+      txFilter = b.getAttribute("data-f");
+      Array.prototype.forEach.call($("filters").children, function (x) { x.classList.toggle("active", x === b); });
+      renderTxList();
+    });
   });
 
   // ---------- Πλοήγηση μήνα ----------
-  $("prevMonth").addEventListener("click", function () {
-    viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; } renderAll();
-  });
-  $("nextMonth").addEventListener("click", function () {
-    viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } renderAll();
-  });
+  $("prevMonth").addEventListener("click", function () { viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; } renderAll(); });
+  $("nextMonth").addEventListener("click", function () { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } renderAll(); });
 
   // ---------- Θέμα ----------
   $("themeBtn").addEventListener("click", function () {
@@ -577,17 +640,14 @@
     document.documentElement.setAttribute("data-theme", next);
     try { localStorage.setItem("exp_theme", next); } catch (e) {}
   });
-  try {
-    var savedTheme = localStorage.getItem("exp_theme");
-    if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
-  } catch (e) {}
+  try { var st = localStorage.getItem("exp_theme"); if (st) document.documentElement.setAttribute("data-theme", st); } catch (e) {}
 
   // ---------- Backup ----------
   $("exportBtn").addEventListener("click", function () {
     var blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
-    a.href = url; a.download = "exoda-" + monthKey(viewYear, viewMonth) + ".json";
+    a.href = url; a.download = "esoda-exoda-" + monthKey(viewYear, viewMonth) + ".json";
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
     toast("Εξήχθη αρχείο");
@@ -600,13 +660,17 @@
     reader.onload = function () {
       try {
         var d = JSON.parse(reader.result);
-        if (!d || typeof d !== "object" || !Array.isArray(d.expenses)) throw new Error("bad");
+        if (!d || typeof d !== "object") throw new Error("bad");
         data = {
           categories: (d.categories && d.categories.length) ? d.categories : DEFAULT_CATS.slice(),
+          incomeCategories: (d.incomeCategories && d.incomeCategories.length) ? d.incomeCategories : DEFAULT_INCOME_CATS.slice(),
           expenses: Array.isArray(d.expenses) ? d.expenses : [],
-          fixed: Array.isArray(d.fixed) ? d.fixed : []
+          incomes: Array.isArray(d.incomes) ? d.incomes : [],
+          fixed: Array.isArray(d.fixed) ? d.fixed : [],
+          fixedIncome: Array.isArray(d.fixedIncome) ? d.fixedIncome : [],
+          _seeded: true
         };
-        save(); refreshCategoryDropdowns(); renderAll();
+        save(); refreshDropdowns(); renderAll();
         toast("✓ Εισήχθησαν τα δεδομένα");
       } catch (e) { toast("⚠ Μη έγκυρο αρχείο"); }
     };
@@ -622,96 +686,84 @@
     toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2200);
   }
 
-  // ---------- Φωνητική αναγνώριση (Web Speech API) ----------
+  // ---------- Φωνητική αναγνώριση ----------
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   var recog = null, listening = false;
+
+  function matchCategory(low, map) {
+    for (var cat in map) {
+      var kws = map[cat];
+      for (var i = 0; i < kws.length; i++) { if (low.indexOf(kws[i]) >= 0) return cat; }
+    }
+    return null;
+  }
 
   function parseSpeech(text) {
     var raw = (text || "").trim();
     var low = raw.toLowerCase();
-    // Βρες ποσό: ακέραιο ή δεκαδικό (με , ή .)
+    var isIncome = false;
+    for (var t = 0; t < INCOME_TRIGGERS.length; t++) { if (low.indexOf(INCOME_TRIGGERS[t]) >= 0) { isIncome = true; break; } }
     var m = low.match(/(\d+(?:[.,]\d{1,2})?)/);
     var amount = m ? parseFloat(m[1].replace(",", ".")) : null;
-    // Αφαίρεσε το ποσό + "ευρω/euro/€" για να μείνει η περιγραφή
-    var rest = low
-      .replace(/(\d+(?:[.,]\d{1,2})?)/, " ")
-      .replace(/ευρω|ευρώ|euro|€|λεπτα|λεπτά/g, " ")
-      .replace(/\s+/g, " ").trim();
-    // Αναγνώριση κατηγορίας από λέξεις-κλειδιά
+    var rest = low.replace(/(\d+(?:[.,]\d{1,2})?)/, " ").replace(/ευρω|ευρώ|euro|€|λεπτα|λεπτά/g, " ").replace(/\s+/g, " ").trim();
     var category = null;
-    outer:
-    for (var cat in CAT_KEYWORDS) {
-      var kws = CAT_KEYWORDS[cat];
-      for (var i = 0; i < kws.length; i++) {
-        if (low.indexOf(kws[i]) >= 0) { category = cat; break outer; }
+    if (isIncome) {
+      category = matchCategory(low, INCOME_KEYWORDS);
+      if (!category) {
+        for (var j = 0; j < data.incomeCategories.length; j++) { if (low.indexOf(data.incomeCategories[j].toLowerCase()) >= 0) { category = data.incomeCategories[j]; break; } }
       }
-    }
-    // Αν όχι, μήπως ειπώθηκε όνομα υπάρχουσας κατηγορίας;
-    if (!category) {
-      for (var j = 0; j < data.categories.length; j++) {
-        if (low.indexOf(data.categories[j].toLowerCase()) >= 0) { category = data.categories[j]; break; }
+      if (!category) category = "Άλλα έσοδα";
+    } else {
+      category = matchCategory(low, CAT_KEYWORDS);
+      if (!category) {
+        for (var k = 0; k < data.categories.length; k++) { if (low.indexOf(data.categories[k].toLowerCase()) >= 0) { category = data.categories[k]; break; } }
       }
+      if (!category) category = "Άλλα";
     }
-    if (!category) category = "Άλλα";
-    return { amount: amount, category: category, desc: rest || "", raw: raw };
-  }
-
-  function todayStr() {
-    var d = new Date();
-    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+    return { kind: isIncome ? "income" : "expense", amount: amount, category: category, desc: rest || "", raw: raw };
   }
 
   function startListening() {
     if (!SR) { toast("Η φωνή δεν υποστηρίζεται εδώ — χρησιμοποίησε Chrome"); return; }
     if (listening) { recog.stop(); return; }
     recog = new SR();
-    recog.lang = "el-GR";
-    recog.interimResults = false;
-    recog.maxAlternatives = 1;
+    recog.lang = "el-GR"; recog.interimResults = false; recog.maxAlternatives = 1;
     listening = true;
     $("micBtn").classList.add("listening");
-    $("micStatus").textContent = "Ακούω… μίλα τώρα";
-    $("micHint").textContent = "";
+    $("micStatus").textContent = "Ακούω… μίλα τώρα"; $("micHint").textContent = "";
     recog.onresult = function (ev) {
       var text = ev.results[0][0].transcript;
       var p = parseSpeech(text);
       $("micHint").textContent = "Άκουσα: «" + p.raw + "»";
       if (p.amount && p.amount > 0) {
-        addExpense(p.amount, p.category, p.desc, todayStr());
-        $("micStatus").textContent = "✓ " + fmt(p.amount) + " → " + p.category;
-        toast("✓ " + fmt(p.amount) + " · " + p.category);
+        addEntry(p.kind, p.amount, p.category, p.desc, todayStr());
+        $("micStatus").textContent = (p.kind === "income" ? "✓ Έσοδο " : "✓ Έξοδο ") + fmt(p.amount) + " → " + p.category;
+        toast((p.kind === "income" ? "✓ Έσοδο " : "✓ Έξοδο ") + fmt(p.amount) + " · " + p.category);
       } else {
-        // Δεν βρέθηκε ποσό: προσυμπλήρωσε τη φόρμα για διόρθωση
+        setKind(p.kind);
         $("desc").value = p.desc;
-        $("category").value = (data.categories.indexOf(p.category) >= 0) ? p.category : $("category").value;
+        var list = p.kind === "income" ? data.incomeCategories : data.categories;
+        if (list.indexOf(p.category) >= 0) $("category").value = p.category;
         $("amount").focus();
         $("micStatus").textContent = "Δεν κατάλαβα ποσό — συμπλήρωσέ το στη φόρμα";
       }
     };
     recog.onerror = function (ev) {
-      $("micStatus").textContent = ev.error === "not-allowed"
-        ? "Δώσε άδεια μικροφώνου στον browser"
-        : "Σφάλμα φωνής: " + ev.error;
+      $("micStatus").textContent = ev.error === "not-allowed" ? "Δώσε άδεια μικροφώνου στον browser" : "Σφάλμα φωνής: " + ev.error;
     };
-    recog.onend = function () {
-      listening = false;
-      $("micBtn").classList.remove("listening");
-    };
-    try { recog.start(); }
-    catch (e) { listening = false; $("micBtn").classList.remove("listening"); }
+    recog.onend = function () { listening = false; $("micBtn").classList.remove("listening"); };
+    try { recog.start(); } catch (e) { listening = false; $("micBtn").classList.remove("listening"); }
   }
-
   $("micBtn").addEventListener("click", startListening);
   if (!SR) {
     $("micStatus").textContent = "Η φωνητική εισαγωγή δεν υποστηρίζεται σε αυτόν τον browser.";
-    $("micBtn").disabled = true;
-    $("micBtn").style.opacity = ".5";
+    $("micBtn").disabled = true; $("micBtn").style.opacity = ".5";
   }
 
   // ---------- Αρχικοποίηση ----------
   $("date").value = todayStr();
-  save(); // διατήρησε τυχόν σπορά προκαθορισμένων παγίων/κατηγοριών
-  refreshCategoryDropdowns();
+  save();
+  setKind("expense");
   renderAll();
 })();
 </script>
